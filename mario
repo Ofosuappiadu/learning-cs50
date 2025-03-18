@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <cs50.h>
+
+int main(void)
+{
+    // Prompt the user for the pyramid height
+    int height;
+    do
+    {
+        height = get_int("Height (1-8): ");
+    } while (height < 1 || height > 8);
+
+    // Build the pyramid
+    for (int row = 1; row <= height; row++)
+    {
+        // Print leading spaces for alignment
+        for (int space = 0; space < height - row; space++)
+        {
+            printf(" ");
+        }
+
+        // Print left hashes
+        for (int hash = 0; hash < row; hash++)
+        {
+            printf("#");
+        }
+
+        // Print gap (two spaces)
+        printf("  ");
+
+        // Print right hashes
+        for (int hash = 0; hash < row; hash++)
+        {
+            printf("#");
+        }
+
+        // Move to the next line
+        printf("\n");
+    }
+}
