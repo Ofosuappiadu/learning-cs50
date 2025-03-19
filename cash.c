@@ -87,6 +87,7 @@ int calculate_pennies(int cents)
     {
         cents -= 1;
         pennies++;
+        
     }
     return pennies;
 }
