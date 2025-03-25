@@ -1,9 +1,12 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
 
 // Function to check if input is a valid number
-bool is_valid_key(string key);
+int is_valid_key(const char *key);
 
-int main(int argc, string argv[])
+int main(int argc, char *argv[])
 {
     // Ensure exactly one command-line argument is provided
     if (argc != 2 || !is_valid_key(argv[1]))
@@ -12,33 +15,39 @@ int main(int argc, string argv[])
         return 1;
     }
 
-    // Convert key from string to integer
-    int key = atoi(argv[1]);
+    // Convert key from string to integer and normalize it
+    int key = atoi(argv[1]) % 26; // Ensures key wraps around within 26 letters
 
     // Get plaintext input from user
-    string plaintext = get_string("plaintext:  ");
+    char plaintext[256];
+    printf("plaintext: ");
+    if (!fgets(plaintext, sizeof(plaintext), stdin))
+    {
+        printf("Error reading input\n");
+        return 1;
+    }
+
+    // Remove newline character if present
+    plaintext[strcspn(plaintext, "\n")] = '\0';
 
     printf("ciphertext: ");
 
     // Encrypt each character
-    for (int i = 0, n = strlen(plaintext); i < n; i++)
+    for (int i = 0; plaintext[i] != '\0'; i++)
     {
         char ch = plaintext[i];
 
-        // Encrypt uppercase letters
         if (isupper(ch))
         {
-            printf("%c", (ch - 'A' + key) % 26 + 'A');
+            putchar((ch - 'A' + key) % 26 + 'A');
         }
-        // Encrypt lowercase letters
         else if (islower(ch))
         {
-            printf("%c", (ch - 'a' + key) % 26 + 'a');
+            putchar((ch - 'a' + key) % 26 + 'a');
         }
-        // Leave non-alphabetic characters unchanged
         else
         {
-            printf("%c", ch);
+            putchar(ch);
         }
     }
 
@@ -47,14 +56,14 @@ int main(int argc, string argv[])
 }
 
 // Function to check if key contains only digits
-bool is_valid_key(string key)
+int is_valid_key(const char *key)
 {
-    for (int i = 0; i < strlen(key); i++)
+    for (int i = 0; key[i] != '\0'; i++)
     {
         if (!isdigit(key[i]))
         {
-            return false;
+            return 0;
         }
     }
-    return true;
+    return 1;
 }
